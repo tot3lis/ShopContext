@@ -1,0 +1,15 @@
+operation_number,operation_name,work_center
+0100,Kitting,643c01
+0200,Record Traceability,643c01
+0300,Process Secondary Side SMT,612c04
+0400,Process Primary Side SMT,612c04
+0500,Touch Up,632w01
+0600,Install Thru Holes,632w01
+0700,Touch Up,632w01
+0800,Insp,635s01
+0900,Test,635c01
+1000,Bonding,632w01
+1100,Conformal Coat,612w02
+1200,Apply UID Label,632w01
+1300,Final Insp,635s01
+1400,Ship,643c01
