@@ -1,62 +1,87 @@
-# ShopContext Repo Skill
+# ShopContext
 
-ShopContext is a repo-scoped Codex Skill for creating a shop-specific manufacturing reference from routers, work orders, operation lists, work centers, machine lists, asset exports, and user corrections.
+ShopContext is a Codex Skill that helps create a shop-specific manufacturing reference file.
 
-It is Layer 1 shop context only. It does not perform RCCA, root cause analysis, corrective action generation, defect trend analysis, SPC analysis, machine performance analysis, maintenance event analysis, data integration, or ProblemPath routing.
+It reads the process information you already have, such as routers, work orders, operation lists, work centers, machine lists, asset exports, and notes from people who know the shop. It turns that into a clearer reference for how the shop appears to work.
 
-## Location
+## What It Solves
 
-This skill should live at:
+Manufacturing files often explain the shop in fragments. A router may list operation numbers, a machine list may use different names, and work centers may be coded values that only make sense to local users.
 
-```text
-.agents/skills/shop-context/
-```
+ShopContext helps connect those pieces so future work can understand:
 
-Required structure:
+- What the shop builds
+- How work flows through operations
+- What operation numbers mean
+- What work centers and machines are involved
+- Where inspection and test happen
+- Which mappings are uncertain and need confirmation
 
-```text
-.agents/skills/shop-context/
-├── SKILL.md
-├── references/
-└── tests/
-```
+## What You Provide
 
-## Response Modes
+Useful inputs include:
 
-- User Setup Mode: default when a user provides real shop setup files. Produces a short setup review, top uncertainties, targeted questions, and next step. Does not generate the full `shop-reference.md` unless explicitly requested.
-- Compact Validation Mode: use when testing, validating, reviewing, or simulating skill behavior. Produces a compact verdict and avoids duplicate full tables.
-- Full Reference Mode: use only when the user explicitly asks for the full, final, complete, or generated `shop-reference.md`.
+- Routers or work orders
+- Operation lists
+- Work center lists
+- Machine or asset lists
+- Notes about manual steps, inspection, test, or local terminology
+- Corrections to any mapping ShopContext gets wrong
 
-## Fresh-Clone Test Prompts
+The inputs can be rough exports, copied tables, CSV files, or plain notes.
 
-### 1. Compact Validation Mode
+## What It Creates
 
-```text
-Use ShopContext to validate the synthetic test files under .agents/skills/shop-context/tests.
-Use Compact Validation Mode only. Do not generate the full shop-reference.md.
-```
+ShopContext creates a draft `shop-reference.md`.
 
-Expected: compact validation verdict only.
+By default, it will first show a short setup review instead of the full file. The setup review explains what it understood, what is uncertain, and what questions need answers.
 
-### 2. User Setup Mode
+The full `shop-reference.md` is generated only when you ask for the full reference.
 
-```text
-Use ShopContext on these CCA router and machine list files:
-.agents/skills/shop-context/tests/real-use-cca-shop/cca_shop_router_template_3col.csv
-.agents/skills/shop-context/tests/real-use-cca-shop/cca_shop_machine_list.csv
-Do not generate the full shop-reference.md yet. Give the short setup review and what needs confirmation.
-```
+## How To Use It In Codex
 
-Expected: `ShopContext Setup Review` with what was found, major uncertainties, 5-10 targeted questions, and next step.
+Add your shop files to the conversation or point Codex to them in the repo, then ask ShopContext to review them.
 
-### 3. Full Reference Mode
+Example prompt:
 
 ```text
-Use ShopContext Full Reference Mode on:
-.agents/skills/shop-context/tests/real-use-cca-shop/cca_shop_router_template_3col.csv
-.agents/skills/shop-context/tests/real-use-cca-shop/cca_shop_machine_list.csv
-Generate the complete draft shop-reference.md.
+Use ShopContext on these router and machine list files.
+Do not generate the full shop-reference.md yet.
+Give me the short setup review and tell me what you need me to confirm.
 ```
 
-Expected: complete draft `shop-reference.md` using the required 13-section schema.
+After ShopContext asks questions, reply with the answers or corrections you know. It is fine to say `unknown` for anything you cannot confirm.
+
+When the setup review looks right, ask:
+
+```text
+Generate the full shop-reference.md.
+```
+
+## What ShopContext Does Not Do
+
+ShopContext does not:
+
+- Solve defects
+- Determine root cause
+- Write RCCAs
+- Generate corrective actions
+- Analyze defect trends
+- Analyze SPC data
+- Parse machine logs
+- Analyze maintenance events
+- Integrate with MES, QMS, ERP, or other data systems
+- Route work to ProblemPath
+
+It only builds stable shop context.
+
+## For Testing
+
+Synthetic examples are included under `tests/`. They are intentionally rough and should not contain private shop data.
+
+Use the synthetic tests to check:
+
+- Short setup review behavior
+- Compact validation behavior
+- Full `shop-reference.md` generation when explicitly requested
 
