@@ -1,99 +1,147 @@
 # ShopContext
 
-ShopContext is a standalone manufacturing AI prep skill that helps create a shop-specific manufacturing reference file.
+ShopContext turns messy manufacturing shop documents into a clean `shop-reference.md` file that AI can use to understand how a specific shop works.
 
-It reads the process information you already have, such as routers, work orders, operation lists, work centers, machine lists, asset exports, attached operation instructions, and notes from people who know the shop. It turns messy shop documents into a cleaner AI-readable reference for how the shop appears to work.
+## What It Does
 
-## What It Solves
+ShopContext reads files like:
 
-Manufacturing files often explain the shop in fragments. A router may list vague operation names, a machine list may use different names, work centers may be coded values that only make sense to local users, and the real process details may be hidden in attached PDFs, Word documents, markdown files, text files, or copied operation instructions.
+- routers
+- work orders
+- PRTs / travelers
+- operation work instructions
+- machine / asset lists
+- shop notes
+- acronym lists
+- user corrections
 
-ShopContext helps connect those pieces so future work can understand:
+Then it creates a reusable `shop-reference.md` that explains:
 
-- What the shop builds
-- How work flows through operations
-- What operation numbers mean
-- What internal process steps are hidden inside vague router operations
-- What work centers and machines are involved
-- Where quality gates, inspection, review, and test happen
-- Which mappings are uncertain and need confirmation
+- operation flow
+- operation meanings
+- hidden steps inside vague operations
+- work centers
+- machines / equipment
+- quality gates
+- shop-specific language
 
-## What You Provide
+## Why It Matters
 
-Useful inputs include:
+Manufacturing data is usually messy.
 
-- Routers or work orders
-- Operation lists
-- Work center lists
-- Machine or asset lists
-- Attached operation instructions
-- Notes about manual steps, inspection, test, or local terminology
-- Corrections to any mapping ShopContext gets wrong
+Common problems:
 
-The inputs can be rough exports, copied tables, CSV files, PDFs, Word documents, markdown files, text files, copied instructions, or plain notes.
+- different names for the same process
+- same word meaning different things
+- vague operation names
+- instructions hidden in PDFs or Word docs
+- machine lists not mapped to operations
+- legacy exports
+- missing work centers
+- duplicate asset names
 
-## What It Creates
+ShopContext gives AI the shop dictionary it needs before answering manufacturing questions.
 
-ShopContext creates a lean `shop-reference.md`.
+## Simple Example
 
-By default, it will first show a short setup review instead of the full file. The setup review explains what it understood, what is uncertain, and what questions need answers.
+Router says:
 
-The full `shop-reference.md` is generated only when you ask for the full reference.
+```text
+Op 0200 - Process Secondary Side
+```
 
-The final reference uses this structure:
+Attached instruction says the operation includes:
 
-1. Shop Type / Process Context
-2. Standard Operation Flow
-3. Operation Dictionary
-4. Operation Step Summaries
-5. Work Center Dictionary
-6. Machine / Equipment Dictionary
-7. Quality Gates
-8. Shop-Specific Language
+```text
+solder paste -> pick-and-place -> vapor phase -> wash -> bake -> inspection
+```
 
-## How To Use It In Codex
+ShopContext summarizes Op 0200 as a multi-step SMT process instead of treating it as one vague operation.
 
-Add your shop files to the conversation or point Codex to them in the repo, then ask ShopContext to review them.
+## Output
+
+The main output is:
+
+```text
+shop-reference.md
+```
+
+Final structure:
+
+```md
+# Shop Reference
+
+## 1. Shop Type / Process Context
+## 2. Standard Operation Flow
+## 3. Operation Dictionary
+## 4. Operation Step Summaries
+## 5. Work Center Dictionary
+## 6. Machine / Equipment Dictionary
+## 7. Quality Gates
+## 8. Shop-Specific Language
+```
+
+## How To Use
 
 Example prompt:
 
 ```text
-Use ShopContext on these router and machine list files.
-Do not generate the full shop-reference.md yet.
-Give me the short setup review and tell me what you need me to confirm.
+Use the ShopContext skill on these files:
+
+- router_export.md
+- op_0200_work_instruction.md
+- machine_list.md
+- shop_notes.md
+
+Generate the ShopContext Review and draft final shop-reference.md.
 ```
 
-After ShopContext asks questions, reply with the answers or corrections you know. It is fine to say `unknown` for anything you cannot confirm.
+Workflow:
 
-When the setup review looks right, ask:
+1. Upload available shop files.
+2. Run ShopContext.
+3. Review questions or low-confidence items.
+4. Correct anything needed.
+5. Save the final `shop-reference.md`.
 
-```text
-Generate the full shop-reference.md.
-```
+## What It Is Not
 
-## What ShopContext Does Not Do
+ShopContext is not:
 
-ShopContext does not:
+- an RCCA solver
+- a root-cause engine
+- a corrective action generator
+- a defect trend analyzer
+- an SPC tool
+- a live MES/QMS/ERP integration
 
-- Solve defects
-- Determine root cause
-- Generate corrective actions
-- Analyze defect trends
-- Analyze SPC data
-- Parse machine logs
-- Analyze maintenance events
-- Integrate with MES, QMS, ERP, or other data systems
+It creates shop context. It does not solve defects.
 
-It only builds shop context.
+## Validation
 
-## For Testing
+ShopContext has passed simulated validation for:
 
-Synthetic examples are included under `tests/`. They are intentionally rough and should not contain private shop data.
+| Test | Stress Case | Result |
+|---|---|---|
+| CCA hidden steps | Vague op with attached instruction | Passed |
+| Machining PRT | One PRT with many ops | Passed |
+| Harness five PNs | Same flow, different names/granularity | Passed |
+| Bad input quality | Missing, conflicting, duplicate data | Passed |
 
-Use the synthetic tests to check:
+## Design Rules
 
-- Short setup review behavior
-- Compact validation behavior
-- Full `shop-reference.md` generation when explicitly requested
-- Operation instruction summarization behavior
+- Preserve exact operation numbers, names, work centers, and machine names.
+- Do not assume router operations are atomic.
+- Use attached instructions to find hidden internal steps.
+- Normalize meaning without deleting original shop terms.
+- Do not invent missing instructions.
+- Do not fake machine-to-operation mappings.
+- Keep the final reference lean.
+- Preserve uncertainty when the source data is uncertain.
 
+## Current Limits
+
+- Real PDF/DOCX parsing still needs real-use validation.
+- Image-heavy instructions may need OCR or manual export.
+- Very large file sets have not been performance-tested.
+- User correction loop still needs end-to-end validation.
