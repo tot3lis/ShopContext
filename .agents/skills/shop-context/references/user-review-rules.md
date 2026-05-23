@@ -62,6 +62,12 @@ Open questions belong in the ShopContext Review stage. Do not include a standalo
 
 If uncertainty remains after user review, mark it briefly inside the relevant final section using `Unknown`, `appears to`, or `likely`.
 
+Low confidence does not stop drafting. Low confidence does stop finalization.
+
+If there are low-confidence mappings, unknown work centers, unmapped active machines, conflicting source data, optional/rework/MRB steps, or unconfirmed records/logs assumptions, ask targeted review questions before presenting the final `shop-reference.md`.
+
+Do not silently present uncertain mappings as final.
+
 ## Question Prioritization For User Setup Mode
 
 In User Setup Mode, do not list every possible open question.

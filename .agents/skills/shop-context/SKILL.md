@@ -92,18 +92,19 @@ Rules:
 
 When the user provides shop documents:
 
-1. Identify source documents provided.
-2. Extract operation numbers, operation names, work centers, product or assembly hints, and route sequence.
+1. Read all provided shop files, including files in `user-test-files` when the user points ShopContext there.
+2. Extract operations, work centers, machines/equipment, quality gates, inspection/test points, confirmed records/logs, and uncertainty.
 3. Extract and summarize attached operation instructions into internal process steps for the relevant operation.
 4. Preserve product-specific flows and do not flatten different products into one fake universal route.
-5. Identify quality gates, inspection points, test points, reviews, and acceptance points.
-6. Extract machines, equipment, fixtures, benches, stations, asset IDs, and stated purposes.
-7. Propose operation-to-machine/equipment mappings and internal process-step mappings.
-8. Assign confidence levels during review.
-9. Flag uncertain mappings, vague operations, conflicting source details, and missing instruction links for user review.
-10. After user review, generate a lean final `shop-reference.md`.
+5. Propose operation-to-machine/equipment mappings and internal process-step mappings.
+6. Assign confidence levels during review.
+7. If meaningful uncertainty exists, ask targeted review questions before finalizing.
+8. After the user answers or corrects uncertain items, generate a lean final `shop-reference.md`.
+9. If no meaningful uncertainty exists, generate the final `shop-reference.md` directly.
 
 Use the reference files in `references/` for extraction, mapping, confidence, user review, and final output rules.
+
+Low confidence does not stop drafting. Low confidence does stop finalization.
 
 ## Response Modes
 
@@ -174,11 +175,15 @@ Open questions belong in the ShopContext Review stage, not in the final `shop-re
 
 Workflow:
 
-1. Produce a ShopContext Review with questions and low-confidence items.
-2. User answers or corrects the review.
-3. Produce the final `shop-reference.md` without unresolved review clutter.
+1. Produce a ShopContext Review from the provided files.
+2. If there are low-confidence mappings, unknown work centers, unmapped active machines, conflicting source data, optional/rework/MRB steps, or unconfirmed records/logs assumptions, ask targeted user review questions before presenting the final `shop-reference.md`.
+3. User answers or corrects the review.
+4. Produce the final `shop-reference.md` without unresolved review clutter.
+5. If no meaningful uncertainty exists, produce the final `shop-reference.md` directly.
 
 If something remains unresolved after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant final section. Do not add a large open-question section to the final reference.
+
+Draft output is allowed with uncertainty. Final `shop-reference.md` requires user confirmation or correction of uncertain items. Do not silently present uncertain mappings as final.
 
 ## Final Reference Rules
 

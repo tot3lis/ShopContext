@@ -25,7 +25,9 @@ Default setup/validation responses should be compact and include:
 
 Avoid duplicating the same operation, work center, machine mapping, instruction summary, and quality-gate tables across multiple sections.
 
-If the user asks for the final reference file, output the complete lean `shop-reference.md`.
+If the user asks for the final reference file and meaningful uncertainty remains, ask targeted review questions first. After the user answers or corrects those items, output the complete lean `shop-reference.md`.
+
+If no meaningful uncertainty exists, output the complete lean `shop-reference.md` directly.
 
 If the user asks for validation only, output the compact validation format.
 
@@ -172,3 +174,5 @@ If uncertainty remains after review, preserve it briefly in the relevant final s
 Do not include a final open-questions section.
 
 Do not include generic evidence-source or likely-records sections. Include records/logs only when the source explicitly confirms they are retained or used, and place them inside the relevant Operation Step Summary as `Confirmed Records / Logs`.
+
+Low confidence does not stop drafting. Low confidence does stop finalization. Drafts may contain clearly labeled uncertainty; final output requires user confirmation or correction of uncertain items unless there is no meaningful uncertainty to resolve.
