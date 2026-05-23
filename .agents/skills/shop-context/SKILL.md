@@ -98,13 +98,82 @@ When the user provides shop documents:
 4. Preserve product-specific flows and do not flatten different products into one fake universal route.
 5. Propose operation-to-machine/equipment mappings and internal process-step mappings.
 6. Assign confidence levels during review.
-7. If meaningful uncertainty exists, ask targeted review questions before finalizing.
+7. If blocking open questions exist, ask targeted review questions before finalizing.
 8. After the user answers or corrects uncertain items, generate a lean final `shop-reference.md`.
-9. If no meaningful uncertainty exists, generate the final `shop-reference.md` directly.
+9. If no blocking open questions exist, generate the final `shop-reference.md` directly.
 
 Use the reference files in `references/` for extraction, mapping, confidence, user review, and final output rules.
 
 Low confidence does not stop drafting. Low confidence does stop finalization.
+
+## Blocking Review Gate
+
+Do not create, write, save, or present final `shop-reference.md` while blocking open questions remain unanswered.
+
+A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
+
+Blocking open questions are unresolved items that could make the final reference misleading for downstream manufacturing skills.
+
+An unresolved item is blocking when it affects one or more of these:
+
+1. Normal operation sequence
+2. Operation meaning
+3. Operation-to-machine or operation-to-equipment mapping
+4. Work center ownership
+5. Manual vs machine ownership
+6. Inspection, test, review, or acceptance-point identity
+7. Whether a step is standard flow vs optional/rework/MRB
+8. Whether evidence, records, or logs are actually retained vs only possible
+9. Conflicts between router data, machine-list data, operation instructions, and user notes
+
+Blocking open questions include:
+
+- Conflicting machine or equipment mappings
+- Low-confidence operation-to-machine mappings that affect normal flow or evidence routing
+- Ambiguous generic operations such as `Process`, `Inspect`, `Verify`, `Build`, `Run`, or `Check` when they represent meaningful production flow
+- Unknown or blank work centers on meaningful production operations
+- Active machines or equipment not mapped to any operation when they appear relevant to the uploaded flow
+- Router operations with no likely machine, equipment, manual, inspection, test, review, or administrative owner
+- Optional, rework, or MRB operations mixed into the normal operation flow
+- Evidence, record, or log retention assumptions that would be stated as fact but are only possible or unconfirmed
+- Conflicts between router data, machine-list data, operation instructions, and user notes
+
+If any blocking open questions exist:
+
+1. Do not create `shop-reference.md`.
+2. Do not write `shop-reference.md`.
+3. Do not save `shop-reference.md`.
+4. Do not present a final `shop-reference.md` in chat.
+5. Output `ShopContext Review - User Confirmation Needed` instead.
+6. Include only:
+   - Sources reviewed
+   - Draft findings summary
+   - Blocking open questions
+   - Clear next step telling the user to answer the questions
+7. Wait for the user to answer.
+8. Only after the user answers may ShopContext create final `shop-reference.md`.
+
+If the user does not answer clearly:
+
+- Output `ShopContext Review - Still Blocked`.
+- List the blocking questions that remain.
+- Do not create final `shop-reference.md`.
+
+If the user explicitly asks to proceed without answering blocking questions:
+
+- Create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference.
+- Do not create final `shop-reference.md`.
+
+Non-blocking unknowns may remain in the final reference only when they do not affect:
+
+- operation sequence
+- operation meaning
+- operation ownership
+- machine/equipment mapping
+- work center ownership
+- quality gates
+- standard-vs-rework status
+- confirmed record/log claims
 
 ## Response Modes
 
@@ -118,7 +187,7 @@ Compact Validation Mode should summarize results and avoid duplicating full tabl
 
 User Setup Mode should summarize what ShopContext found, the main uncertainties, the highest-priority user questions, and the next step. It should not output the full `shop-reference.md`.
 
-Full Reference Mode should output the complete `shop-reference.md` using the required lean schema.
+Full Reference Mode should output the complete `shop-reference.md` using the required lean schema only when no blocking open questions remain. If blocking open questions remain, output `ShopContext Review - User Confirmation Needed` instead.
 
 Do not output a full ShopContext Review and a full draft `shop-reference.md` in the same response unless the user explicitly asks for both.
 
@@ -176,14 +245,14 @@ Open questions belong in the ShopContext Review stage, not in the final `shop-re
 Workflow:
 
 1. Produce a ShopContext Review from the provided files.
-2. If there are low-confidence mappings, unknown work centers, unmapped active machines, conflicting source data, optional/rework/MRB steps, or unconfirmed records/logs assumptions, ask targeted user review questions before presenting the final `shop-reference.md`.
+2. If blocking open questions exist, ask targeted user review questions before presenting the final `shop-reference.md`.
 3. User answers or corrects the review.
 4. Produce the final `shop-reference.md` without unresolved review clutter.
-5. If no meaningful uncertainty exists, produce the final `shop-reference.md` directly.
+5. If no blocking open questions exist, produce the final `shop-reference.md` directly.
 
-If something remains unresolved after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant final section. Do not add a large open-question section to the final reference.
+If a non-blocking unknown remains after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant final section. Do not add a large open-question section to the final reference.
 
-Draft output is allowed with uncertainty. Final `shop-reference.md` requires user confirmation or correction of uncertain items. Do not silently present uncertain mappings as final.
+Draft output is allowed with uncertainty. Final `shop-reference.md` requires user confirmation or correction of blocking uncertain items. Do not silently present uncertain mappings as final.
 
 ## Final Reference Rules
 
@@ -205,7 +274,7 @@ Use confidence levels during review:
 - Low: Weak inference that needs user review.
 - Unknown: Not enough evidence to map.
 
-In the final reference, avoid cluttering every line with confidence. If uncertainty remains important, use concise language such as `appears to`, `likely`, or `Unknown`.
+In the final reference, avoid cluttering every line with confidence. Only non-blocking unknowns may remain in final output. Blocking unknowns stop finalization.
 
 ## Critical Rules
 

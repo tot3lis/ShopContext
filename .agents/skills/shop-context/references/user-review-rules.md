@@ -17,6 +17,34 @@ Create open questions for:
 - Possible equivalent operations across routers
 - Product-specific differences that may affect the reference
 
+## Blocking Open Questions
+
+Blocking open questions are unresolved items that could make the final reference misleading for downstream manufacturing skills.
+
+An unresolved item is blocking when it affects one or more of these:
+
+1. Normal operation sequence
+2. Operation meaning
+3. Operation-to-machine or operation-to-equipment mapping
+4. Work center ownership
+5. Manual vs machine ownership
+6. Inspection, test, review, or acceptance-point identity
+7. Whether a step is standard flow vs optional/rework/MRB
+8. Whether evidence, records, or logs are actually retained vs only possible
+9. Conflicts between router data, machine-list data, operation instructions, and user notes
+
+Blocking open questions include:
+
+- Conflicting machine or equipment mappings
+- Low-confidence operation-to-machine mappings that affect normal flow or evidence routing
+- Ambiguous generic operations such as `Process`, `Inspect`, `Verify`, `Build`, `Run`, or `Check` when they represent meaningful production flow
+- Unknown or blank work centers on meaningful production operations
+- Active machines or equipment not mapped to any operation when they appear relevant to the uploaded flow
+- Router operations with no likely machine, equipment, manual, inspection, test, review, or administrative owner
+- Optional, rework, or MRB operations mixed into the normal operation flow
+- Evidence, record, or log retention assumptions that would be stated as fact but are only possible or unconfirmed
+- Conflicts between router data, machine-list data, operation instructions, and user notes
+
 ## Question Quality Rules
 
 - Questions should be specific and targeted.
@@ -60,11 +88,19 @@ Do not remove an open question until the user or source documents resolve it.
 
 Open questions belong in the ShopContext Review stage. Do not include a standalone open-questions section in the final `shop-reference.md`.
 
-If uncertainty remains after user review, mark it briefly inside the relevant final section using `Unknown`, `appears to`, or `likely`.
+If non-blocking uncertainty remains after user review, mark it briefly inside the relevant final section using `Unknown`, `appears to`, or `likely`.
 
 Low confidence does not stop drafting. Low confidence does stop finalization.
 
-If there are low-confidence mappings, unknown work centers, unmapped active machines, conflicting source data, optional/rework/MRB steps, or unconfirmed records/logs assumptions, ask targeted review questions before presenting the final `shop-reference.md`.
+Do not create, write, save, or present final `shop-reference.md` while blocking open questions remain unanswered.
+
+A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
+
+If blocking open questions exist, output `ShopContext Review - User Confirmation Needed` instead of final `shop-reference.md`.
+
+If the user does not answer clearly, output `ShopContext Review - Still Blocked`, list the remaining blocking questions, and do not create final `shop-reference.md`.
+
+If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `shop-reference.md`.
 
 Do not silently present uncertain mappings as final.
 

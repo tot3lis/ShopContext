@@ -29,6 +29,8 @@ Use this when you cloned this repository and want to run ShopContext here.
 Use the ShopContext skill to review all files in user-test-files and generate a shop-reference.md file.
 ```
 
+If blocking questions exist, the first response will be `ShopContext Review - User Confirmation Needed` instead of final `shop-reference.md`.
+
 Repo mode means the skill lives inside this cloned project.
 
 ### B. Install As A Reusable Codex Skill
@@ -47,6 +49,8 @@ $HOME/.agents/skills/shop-context
 ```text
 Use the ShopContext skill to review all files in user-test-files and generate a shop-reference.md file.
 ```
+
+If blocking questions exist, the first response will be `ShopContext Review - User Confirmation Needed` instead of final `shop-reference.md`.
 
 Installed mode means the skill lives in your Codex toolbox and can be reused from other folders.
 
@@ -79,4 +83,4 @@ ShopContext has passed simulated validation for:
 
 ## Use Case
 
-Upload available shop files, run the ShopContext skill, and generate a reusable `shop-reference.md`.
+Upload available shop files, run the ShopContext skill, answer any blocking review questions, and generate a reusable `shop-reference.md`.

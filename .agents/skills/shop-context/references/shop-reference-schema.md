@@ -4,7 +4,7 @@
 
 The final reference should explain how the shop appears to work based on the provided documents. It should preserve exact shop language while normalizing meanings for AI use.
 
-Do not invent missing shop facts. If something remains unresolved after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant section.
+Do not invent missing shop facts. Final `shop-reference.md` may only contain non-blocking unknowns. Blocking unknowns stop finalization and require user review before final output.
 
 ## Scope Boundary
 
@@ -54,7 +54,7 @@ For each operation, include:
 - Product, route, or family where it appears when known
 - Notes only when needed to preserve context
 
-Avoid confidence clutter in the final reference. If uncertainty remains important, use `appears to`, `likely`, or `Unknown`.
+Avoid confidence clutter in the final reference. Use `appears to`, `likely`, or `Unknown` only for non-blocking unknowns. Blocking unknowns stop finalization.
 
 ## 4. Operation Step Summaries
 

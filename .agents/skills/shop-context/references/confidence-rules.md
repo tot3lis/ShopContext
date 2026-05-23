@@ -6,7 +6,7 @@ A confident operation extraction does not mean the machine mapping is confident.
 
 Do not upgrade confidence just because the mapping seems convenient.
 
-In the final `shop-reference.md`, avoid cluttering every line with confidence. If uncertainty remains important after review, state it briefly using language such as `appears to`, `likely`, or `Unknown`.
+In the final `shop-reference.md`, avoid cluttering every line with confidence. Only non-blocking unknowns may remain in final output. Blocking unknowns stop finalization.
 
 ## High
 
@@ -41,7 +41,7 @@ Use Low when:
 - Multiple candidate machines exist and the source does not choose among them.
 - The machine appears related by shop context but not by direct source support.
 
-Low confidence should create an open question.
+Low confidence should create an open question. If the low-confidence item affects normal flow, operation meaning, ownership, machine/equipment mapping, work center ownership, quality gates, standard-vs-rework status, or confirmed record/log claims, it is blocking.
 
 ## Unknown
 
@@ -60,7 +60,8 @@ Unknown confidence should create an open question when the missing item affects 
 - Assign confidence per operation-to-machine mapping.
 - Assign confidence to important operation-to-instruction and instruction-step-to-equipment mappings during review.
 - Assign confidence to important inferred product families or possible equivalent operations when relevant.
-- Keep low-confidence content visible but clearly labeled.
+- Keep low-confidence content visible but clearly labeled in reviews and drafts.
+- Keep low-confidence content in drafts and review output, not in final output when it is blocking.
 - Do not create possible evidence-source lists for final output.
 - Do not convert records/logs/forms/results into confirmed records/logs unless the source documents explicitly confirm they are retained, created, reviewed, exported, or used.
 

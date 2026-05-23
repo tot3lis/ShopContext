@@ -25,9 +25,9 @@ Default setup/validation responses should be compact and include:
 
 Avoid duplicating the same operation, work center, machine mapping, instruction summary, and quality-gate tables across multiple sections.
 
-If the user asks for the final reference file and meaningful uncertainty remains, ask targeted review questions first. After the user answers or corrects those items, output the complete lean `shop-reference.md`.
+If the user asks for the final reference file and blocking open questions remain, do not output final `shop-reference.md`. Output `ShopContext Review - User Confirmation Needed` instead.
 
-If no meaningful uncertainty exists, output the complete lean `shop-reference.md` directly.
+If no blocking open questions exist, output the complete lean `shop-reference.md` directly.
 
 If the user asks for validation only, output the compact validation format.
 
@@ -169,10 +169,36 @@ When the user approves or asks for the final file, provide:
 ## 8. Shop-Specific Language
 ```
 
-If uncertainty remains after review, preserve it briefly in the relevant final section using clear language such as `Unknown`, `appears to`, or `likely`.
+If non-blocking uncertainty remains after review, preserve it briefly in the relevant final section using clear language such as `Unknown`, `appears to`, or `likely`.
 
 Do not include a final open-questions section.
 
 Do not include generic evidence-source or likely-records sections. Include records/logs only when the source explicitly confirms they are retained or used, and place them inside the relevant Operation Step Summary as `Confirmed Records / Logs`.
 
-Low confidence does not stop drafting. Low confidence does stop finalization. Drafts may contain clearly labeled uncertainty; final output requires user confirmation or correction of uncertain items unless there is no meaningful uncertainty to resolve.
+Low confidence does not stop drafting. Low confidence does stop finalization. Drafts may contain clearly labeled uncertainty; final output requires user confirmation or correction of blocking uncertain items.
+
+Do not create, write, save, or present final `shop-reference.md` while blocking open questions remain unanswered.
+
+A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
+
+If blocking open questions exist, output exactly this review shape:
+
+# ShopContext Review - User Confirmation Needed
+
+## Sources Reviewed
+
+## Draft Findings Summary
+
+## Blocking Open Questions
+
+## Next Step
+
+Tell the user to answer the blocking questions. Do not include final `shop-reference.md`.
+
+If the user does not answer clearly, output:
+
+# ShopContext Review - Still Blocked
+
+List the blocking questions that remain. Do not create final `shop-reference.md`.
+
+If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `shop-reference.md`.
