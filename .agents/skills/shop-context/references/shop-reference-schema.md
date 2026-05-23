@@ -1,96 +1,143 @@
 # Shop Reference Schema
 
-`shop-reference.md` is the final V1 output of ShopContext. It is a stable manufacturing context file for one shop or shop area.
+`shop-reference.md` is the final output of ShopContext. It is a lean, AI-readable manufacturing context file for one shop, shop area, line, cell, or process family.
 
-Do not invent missing shop facts. If the source documents do not support a claim, mark it as unknown or put it in Open Mapping Questions.
+The final reference should explain how the shop appears to work based on the provided documents. It should preserve exact shop language while normalizing meanings for AI use.
+
+Do not invent missing shop facts. If something remains unresolved after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant section.
 
 ## Scope Boundary
 
-`shop-reference.md` describes how the shop appears to operate based on provided sources.
+`shop-reference.md` describes shop context only.
 
 It should not include:
 
 - Defect investigations
 - Root cause claims
 - Corrective actions
-- RCCA conclusions
 - Historical defect trend analysis
+- SPC analysis
 - Machine performance analysis
 - Maintenance event analysis
-- SPC interpretation
+- Dynamic MES, QMS, ERP, or data integration
 
-If defect, maintenance, or quality data appears in the source material, only reference it as a possible future evidence source or shop context item. Do not analyze it in V1.
+If defect, maintenance, quality, or records data appears in the source material, only include it when it helps define the shop context. Do not analyze it.
 
-## Required Sections
+## Lean Final Structure
 
-## 1. Shop Overview
+The final `shop-reference.md` must use this structure:
 
-Plain-language summary of what the shop appears to build and what type of manufacturing it performs. Include product type, manufacturing style, and major process families only when supported by the sources.
+# Shop Reference
 
-## 2. Source Documents Reviewed
+## 1. Shop Type / Process Context
 
-List every router, work order, operation list, machine list, and user note used to build the reference. Include document names, dates, revisions, or identifiers when available.
+Plain-language summary of what the shop appears to build or process, the manufacturing style, and major process families. Include only source-supported or clearly labeled inferred context.
 
-## 3. Product Families
+Do not include a separate source-document inventory unless the user asks for it. Source review belongs in the ShopContext Review stage.
 
-List known product or assembly families represented by the uploaded examples. If a product family is inferred from part numbers or router names, label it as inferred.
+## 2. Standard Operation Flow
 
-## 4. Standard Operation Flow
+Ordered flow of operations. Preserve source order and operation numbers exactly.
 
-Ordered list of typical operations. Preserve source order and operation numbers. If multiple product flows differ, show common flow plus product-specific branches instead of flattening all products into one universal route.
+If multiple product flows differ, show common flow plus product-specific branches instead of flattening all products into one universal route.
 
-## 5. Operation Dictionary
+Router operations are process containers, not necessarily atomic steps. If an operation instruction shows many internal steps inside one operation, keep the operation as one router operation in the flow and summarize its internal steps in `## 4. Operation Step Summaries`.
+
+## 3. Operation Dictionary
 
 For each operation, include:
 
 - Operation number exactly as shown
 - Operation name exactly as shown
-- Work center
+- Work center exactly as shown
 - Plain-English meaning
-- Product families where it appears
-- Notes, constraints, or source references
-- Confidence in extraction if needed
+- Product, route, or family where it appears when known
+- Notes only when needed to preserve context
 
-## 6. Work Center Dictionary
+Avoid confidence clutter in the final reference. If uncertainty remains important, use `appears to`, `likely`, or `Unknown`.
 
-For each work center, describe what kind of work it performs. Include known associated operations, machines, manual activities, and inspection or test responsibilities.
+## 4. Operation Step Summaries
 
-For numeric or coded work centers, preserve the raw work center exactly and keep any plain-English description in a separate `Inferred Meaning` field.
+This is the main place for the real work content.
 
-Example:
+For each operation or operation family, summarize:
 
-| Work Center | Raw Value | Inferred Meaning | Basis | Confidence |
-|---|---|---|---|---|
-| 1100 | 1100 | Possible SMT print/place area | Screen Print, Place Components, DEK Horizon, MY200 | Medium |
+- Internal process steps from attached operation instructions
+- Machines, equipment, fixtures, benches, stations, or tools used
+- Manual or human-judgment work
+- Inspection, test, review, acceptance, or other quality gates inside the operation
+- Key parameters explicitly stated in the source, such as temperatures, times, materials, programs, fixtures, or acceptance language
+- Confirmed Records / Logs, only when the source explicitly confirms that the shop retains or uses those records/logs/forms/results
 
-Do not rename numeric work centers as facts.
+Do not copy the full instruction text into `shop-reference.md`.
 
-## 7. Machine-To-Operation Map
+Do not include generic likely records such as machine logs, operator notes, inspection records, photos, test results, or setup sheets unless the source explicitly confirms them.
 
-Link machines to operation numbers, operation names, and work centers. Include mapping basis, confidence, and whether user review is needed.
+## 5. Work Center Dictionary
 
-## 8. Manual / Human Operations
+For each work center, describe what kind of work it appears to perform.
 
-List operations where no dedicated machine is assigned or where human judgment, handling, setup, inspection, documentation, or assembly dominates the work.
+For numeric or coded work centers:
 
-## 9. Inspection And Test Points
+- Preserve the raw work center exactly.
+- Keep any plain-English description in a separate `Inferred Meaning` or equivalent field.
+- Do not rename numeric work centers as facts.
 
-List operations where defects are likely detected, verified, dispositioned, or formally accepted. Include inspection, AOI, test, review, and quality gates.
+Include associated operations and major machines/equipment only when source-supported or clearly inferred.
 
-## 10. Likely Evidence Sources By Operation
+## 6. Machine / Equipment Dictionary
 
-For each operation, list records, logs, photos, notes, travelers, inspection results, test results, traceability records, machine programs, setup sheets, or other evidence that may exist. Label uncertain evidence sources as possible.
+List machines, equipment, fixtures, benches, lines, cells, stations, tools, and asset IDs found in the sources.
 
-Do not claim an evidence source is retained unless the source documents or user notes confirm retention.
+For each item, include:
 
-## 11. Shop-Specific Terminology
+- Name exactly as shown
+- Type or capability when known
+- Work center exactly as shown, or `Unknown`
+- Associated operation or process when supported
+- Notes for ambiguous, backup, inactive, shared, or unmapped equipment
 
-List acronyms, abbreviations, internal labels, machine nicknames, product family names, process names, and shop-specific terms found in the sources.
+Machine-to-operation mapping should be concise here and expanded only where needed in `## 4. Operation Step Summaries`.
 
-## 12. Open Mapping Questions
+## 7. Quality Gates
 
-List specific questions for unmapped, low-confidence, contradictory, or important missing items. Tie each question to an exact operation, work center, machine, or source.
+List inspection, test, review, verification, acceptance, disposition, and approval points.
 
-## 13. Revision Notes
+For each quality gate, include:
 
-Describe what changed since the last version of the reference file. For a first version, state that this is the initial draft and list the source set used.
+- Operation number and name
+- Gate type
+- What appears to be checked or decided
+- Machine/equipment/station if known
+- Product or route scope if known
+
+Do not turn every operation into a quality gate. Include only operations or internal steps that are explicitly inspection/test/review/acceptance-related or clearly quality-control points.
+
+## 8. Shop-Specific Language
+
+Combine terminology and ambiguity handling here.
+
+Include:
+
+- Shop acronyms
+- Alternate names for the same process
+- Overloaded terms with multiple meanings
+- Terms that require operation context to interpret
+- Internal labels, machine nicknames, work center names, product family names, and process names found in the sources
+
+Preserve original terms while explaining normalized meaning.
+
+## Removed From Final Reference
+
+Do not include these as standalone final sections:
+
+- Source Documents Reviewed
+- Product Families
+- Machine-To-Operation Map
+- Manual / Human Operations
+- Inspection And Test Points
+- Likely Evidence Sources By Operation
+- Open Mapping Questions
+- Revision Notes
+
+These topics may appear only when folded into the lean sections above, and only where they add useful shop context.

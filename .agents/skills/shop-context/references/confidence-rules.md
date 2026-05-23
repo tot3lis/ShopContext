@@ -1,10 +1,12 @@
 # Confidence Rules
 
-Assign confidence levels to individual extraction and mapping claims. Confidence must be assigned per mapping, not globally.
+Assign confidence levels to individual extraction and mapping claims during review. Confidence must be assigned per mapping, not globally.
 
 A confident operation extraction does not mean the machine mapping is confident.
 
 Do not upgrade confidence just because the mapping seems convenient.
+
+In the final `shop-reference.md`, avoid cluttering every line with confidence. If uncertainty remains important after review, state it briefly using language such as `appears to`, `likely`, or `Unknown`.
 
 ## High
 
@@ -14,6 +16,7 @@ Use High when:
 - The operation name and machine type are a direct match.
 - The user explicitly confirms the mapping.
 - Source documents explicitly connect the operation and machine.
+- An attached operation instruction is clearly linked to the operation and explicitly names the internal process step, machine, equipment, fixture, or confirmed record/log.
 
 High confidence does not remove the need to preserve source detail.
 
@@ -24,6 +27,7 @@ Use Medium when:
 - The mapping is likely but not explicitly proven.
 - Operation name and machine capability align, but work center is missing.
 - Work center and machine capability align, but operation name is generic.
+- Attached instruction content supports the internal process step, but the exact machine/equipment is not explicit.
 - Only one realistic candidate machine appears in the provided machine list.
 
 Medium confidence may still need user review if the mapping is important.
@@ -45,6 +49,7 @@ Use Unknown when:
 
 - There is not enough evidence to map the item.
 - The operation has no machine information.
+- A router operation is vague and no linked instruction is provided.
 - The machine has no associated operation, process type, or work center.
 - Source documents contradict each other and cannot be reconciled.
 
@@ -53,9 +58,11 @@ Unknown confidence should create an open question when the missing item affects 
 ## Required Practice
 
 - Assign confidence per operation-to-machine mapping.
+- Assign confidence to important operation-to-instruction and instruction-step-to-equipment mappings during review.
 - Assign confidence to important inferred product families or possible equivalent operations when relevant.
 - Keep low-confidence content visible but clearly labeled.
-- Do not convert possible evidence sources into known evidence sources unless the source documents confirm they exist.
+- Do not create possible evidence-source lists for final output.
+- Do not convert records/logs/forms/results into confirmed records/logs unless the source documents explicitly confirm they are retained, created, reviewed, exported, or used.
 
 ## Downgrade Rules
 
@@ -65,6 +72,7 @@ Downgrade confidence when:
 - Operation names are generic, such as "process," "inspect," "test," or "assemble."
 - Work centers are missing, inconsistent, or contradictory.
 - A machine appears in the machine list but is not tied to an operation.
+- An operation instruction cannot be confidently matched to a router operation.
 - The mapping depends only on general manufacturing knowledge instead of source evidence.
 - Different routers use similar operation names for different purposes.
 

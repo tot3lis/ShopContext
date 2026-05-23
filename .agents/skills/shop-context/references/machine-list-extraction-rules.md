@@ -7,7 +7,7 @@ Use these rules when extracting manufacturing context from machine lists, asset 
 Machine lists describe equipment context. They do not define the process sequence by themselves.
 
 Use routers/work orders to establish operation sequence.
-Use machine lists to support machine-to-operation mapping.
+Use machine lists and attached operation instructions to support machine-to-operation and equipment-to-step mapping.
 If a machine list conflicts with router flow, preserve both and flag the mismatch for review.
 
 ## Extracted Fields
@@ -19,9 +19,10 @@ Extract the following when present:
 - Work center
 - Associated operation
 - Process capability
-- Evidence source possibilities
 - Manual notes
 - Asset number, serial number, line, cell, or location
+- Fixtures, benches, stations, tooling, or other equipment names
+- Explicitly confirmed records/logs only when stated by the source
 
 ## Machine Name
 
@@ -67,24 +68,13 @@ Capture stated capabilities such as:
 
 Do not infer detailed capability limits such as tolerance, capacity, recipe, or program unless provided.
 
-## Evidence Source Possibilities
+## Confirmed Records / Logs
 
-List possible evidence sources when supported by machine type or notes. Examples include:
+Do not create generic evidence-source lists from machine type alone.
 
-- Machine program
-- Setup sheet
-- Run log
-- Operator log
-- Recipe
-- Inspection image
-- AOI result file
-- Test result
-- Calibration record
-- Maintenance record
+Only extract records/logs/forms/results when the machine list, asset export, operation instruction, or user note explicitly states that the shop creates, retains, exports, reviews, or uses them.
 
-Label these as possible unless the source explicitly states they are retained.
-
-Do not state that a log, image, record, recipe, or result file exists unless the source explicitly says it exists or is retained.
+Place confirmed records/logs in the relevant Operation Step Summary in the final reference. If the record/log is machine-specific but not tied to an operation, keep a concise note in the Machine / Equipment Dictionary.
 
 ## Handling Incomplete Machine Lists
 

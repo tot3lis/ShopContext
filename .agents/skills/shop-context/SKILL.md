@@ -1,120 +1,125 @@
 # ShopContext
 
-ShopContext is a Codex Skill for creating a shop-specific manufacturing reference file. It turns routers, work orders, operation lists, work centers, machine lists, and user corrections into a reusable `shop-reference.md` file that describes how a specific shop appears to work.
+ShopContext is a standalone manufacturing AI prep skill. It turns messy manufacturing shop documents into a clean, AI-readable `shop-reference.md` file that explains how a specific shop works.
 
-ShopContext is Layer 1 of a larger RCCA Build system. It creates stable shop context only. Downstream skills may later consume the reference file to guide investigations, but ShopContext does not perform investigations itself.
+Manufacturing shops often have dirty data, legacy systems, inconsistent terminology, vague router operation names, disconnected machine lists, and attached operation instructions hidden in PDFs, Word documents, markdown files, text files, or copied document content. ShopContext creates a reusable reference that helps AI understand the shop before answering manufacturing questions.
 
 ## When To Use This Skill
 
 Use ShopContext when the user wants to:
 
 - Create a shop-specific manufacturing reference file
-- Interpret routers, work orders, operation lists, work centers, or machine lists
+- Interpret routers, work orders, travelers, operation lists, work centers, machine lists, asset exports, or operation instructions
 - Build or update `shop-reference.md`
-- Map operations to machines or work centers
-- Identify inspection/test points in a shop flow
-- Create shop context for downstream manufacturing/RCCA skills
+- Map operations to machines, equipment, work centers, and internal process steps
+- Identify quality gates, inspections, tests, reviews, and acceptance points in a shop flow
+- Prepare shop context for later manufacturing questions
 
-Do not use ShopContext when the user asks to solve a defect, determine root cause, write an RCCA, or analyze historical defect trends.
+Do not use ShopContext when the user asks to solve a defect, determine root cause, write a corrective action, analyze historical defect trends, perform SPC analysis, or integrate live manufacturing systems.
 
 ## What ShopContext Is
 
-ShopContext teaches downstream manufacturing workflows:
+ShopContext teaches an AI:
 
-- What the shop builds
-- How work flows through the shop
-- What operation numbers mean
+- What the shop builds or processes
+- How work appears to flow through the shop
+- What operation numbers and operation names mean
+- What internal process steps may be hidden inside a router operation
 - What work centers exist
-- What machines are used
-- Where inspection and test happen
+- What machines, equipment, fixtures, benches, or stations are used
+- Where quality gates, inspections, tests, reviews, and acceptance points appear
 - Which steps are manual or judgment-based
-- What evidence may exist at each step
-- What terminology is specific to the shop
+- What terminology is specific, inconsistent, overloaded, or context-dependent
 
 ## What ShopContext Is Not
 
 ShopContext is not:
 
-- An RCCA solver
-- A defect analyzer
-- A root cause engine
-- A final RCCA generator
-- A machine log analyzer
-- A maintenance ticket analyzer
-- A historical defect database
-- A full MES, QMS, or ERP integration
+- A defect solver
+- A root-cause engine
+- A corrective-action generator
+- A defect trend analyzer
+- An SPC analyzer
+- A machine performance analyzer
+- A maintenance event analyzer
+- A full MES, QMS, ERP, or data-integration layer
 - A physical shop floor map
 
-ShopContext must stay out of RCCA and root-cause scope. It does not solve defects, assign causes, evaluate containment, or recommend corrective actions.
+ShopContext creates shop context only. It does not solve defects, assign causes, evaluate containment, recommend corrective actions, analyze trends, or integrate dynamic data.
 
 ## Inputs ShopContext Can Use
 
 Minimum useful inputs:
 
-- Sample routers or work orders
+- Sample routers, work orders, travelers, or operation lists
 - Operation numbers
 - Operation names
 - Work centers
-- Machine lists
-- User notes for anything the routers do not explain
+- Machine lists, asset exports, equipment lists, or line/cell descriptions
+- User notes for anything the documents do not explain
 
-Optional useful inputs:
+Major optional inputs:
 
+- Attached operation instructions in PDF, Word, markdown, text, or copied-content form
 - Known machine-to-operation mappings
 - Manual operation notes
-- Inspection and test point notes
-- Shop-specific acronyms or terminology
+- Inspection, test, review, and acceptance-point notes
+- Shop-specific acronyms, alternate names, or terminology
 - Product family notes
-- Material or process notes
-- Evidence source notes
+- Material, setup, handling, process, or acceptance notes
+- Explicitly confirmed records, logs, or forms retained by the shop
 
-ShopContext V1 does not require defect data, machine logs, maintenance tickets, SPC exports, inspection exports, or MES/QMS/ERP integrations.
+ShopContext does not require defect data, machine logs, maintenance tickets, SPC exports, inspection exports, or MES/QMS/ERP integrations.
+
+## Operation Instructions
+
+Treat attached operation instructions as major inputs.
+
+Operation instructions often contain the real process details hidden behind vague router operation names. A router may say `Op 0200 - Process Secondary Side`, while the attached instruction says to apply solder paste, run pick-and-place, run vapor phase, wash, and bake at `90°C`.
+
+Rules:
+
+- Do not assume router operations are atomic.
+- One router operation may contain many internal process steps.
+- Use the router or work order for the operation label, operation number, sequence, and work center.
+- Use attached operation instructions for the actual work performed inside that operation.
+- Summarize operation instructions into concise internal process steps.
+- Do not copy full instructions into `shop-reference.md`.
+- Preserve original shop terms, operation names, machine names, temperatures, times, materials, fixtures, asset IDs, and acceptance language when they matter.
+- If a record or log is explicitly confirmed in an instruction, include it in the relevant Operation Step Summary as `Confirmed Records / Logs`.
 
 ## Standard Workflow
 
-When the user provides routers and machine lists:
+When the user provides shop documents:
 
 1. Identify source documents provided.
-2. Extract operation numbers, operation names, and work centers.
-3. Determine operation sequence.
-4. Group similar operations across routers.
-5. Identify inspection and test points.
-6. Extract machines and their stated purposes.
-7. Propose operation-to-machine mappings.
-8. Assign confidence levels per mapping.
-9. Flag uncertain mappings for user review.
-10. Generate `shop-reference.md`.
-11. Include open questions instead of inventing missing facts.
+2. Extract operation numbers, operation names, work centers, product or assembly hints, and route sequence.
+3. Extract and summarize attached operation instructions into internal process steps for the relevant operation.
+4. Preserve product-specific flows and do not flatten different products into one fake universal route.
+5. Identify quality gates, inspection points, test points, reviews, and acceptance points.
+6. Extract machines, equipment, fixtures, benches, stations, asset IDs, and stated purposes.
+7. Propose operation-to-machine/equipment mappings and internal process-step mappings.
+8. Assign confidence levels during review.
+9. Flag uncertain mappings, vague operations, conflicting source details, and missing instruction links for user review.
+10. After user review, generate a lean final `shop-reference.md`.
 
-Use the reference files in `references/` for extraction, mapping, confidence, and user review rules.
+Use the reference files in `references/` for extraction, mapping, confidence, user review, and final output rules.
 
 ## Response Modes
 
 Use Compact Validation Mode when the user asks to test, validate, review, or simulate ShopContext behavior.
 
-Use User Setup Mode when the user provides real shop inputs for setup, such as routers, work orders, operation lists, work centers, machine lists, asset exports, or user corrections.
+Use User Setup Mode when the user provides real shop inputs for setup, such as routers, work orders, travelers, operation lists, work centers, machine lists, asset exports, operation instructions, or user corrections.
 
-Use Full Reference Mode only when the user explicitly asks for the full `shop-reference.md`, finalized reference, or complete draft reference.
+Use Full Reference Mode only when the user explicitly asks for the full `shop-reference.md`, finalized reference, complete draft reference, or generated reference file.
 
 Compact Validation Mode should summarize results and avoid duplicating full tables.
 
 User Setup Mode should summarize what ShopContext found, the main uncertainties, the highest-priority user questions, and the next step. It should not output the full `shop-reference.md`.
 
-Full Reference Mode should output the complete `shop-reference.md` using the required schema.
+Full Reference Mode should output the complete `shop-reference.md` using the required lean schema.
 
 Do not output a full ShopContext Review and a full draft `shop-reference.md` in the same response unless the user explicitly asks for both.
-
-## Response Mode Selection
-
-Use Compact Validation Mode when the user asks to test, validate, review, or simulate ShopContext behavior.
-
-Use User Setup Mode when the user provides real shop inputs for setup, such as routers, work orders, operation lists, work centers, machine lists, asset exports, or user corrections.
-
-Use Full Reference Mode only when the user explicitly asks for the full, final, complete, or generated `shop-reference.md`.
-
-Do not output a full `shop-reference.md` during User Setup Mode.
-
-Do not output both User Setup Mode and Full Reference Mode in the same response unless the user explicitly asks for both.
 
 ## Standard Setup Response Format
 
@@ -128,83 +133,86 @@ When reviewing source inputs, respond using:
 
 ## 3. Operation Dictionary
 
-## 4. Work Center Dictionary
+## 4. Operation Instruction Summaries
 
-## 5. Proposed Machine-To-Operation Mapping
+## 5. Work Center Dictionary
 
-## 6. Manual / Human Operations
+## 6. Machine / Equipment Dictionary
 
-## 7. Inspection And Test Points
+## 7. Proposed Operation-To-Machine / Equipment Mapping
 
-## 8. Likely Evidence Sources By Operation
+## 8. Quality Gates
 
 ## 9. Low-Confidence Or Unmapped Items
 
-## 10. Open Questions For User Review
+## 10. Questions For User Review
 
 ## 11. Draft shop-reference.md
 
+Only include section 11 when the user explicitly asks for a full draft reference.
+
 ## Required Output
 
-The final V1 output is `shop-reference.md`.
+The final output is `shop-reference.md`.
 
-Do not require JSON output in V1. A future optional output may be `shop-context.json` or `shop-reference.json`, but this scaffold does not define or generate JSON as a required deliverable.
+Do not require JSON output. A future optional output may be `shop-context.json` or `shop-reference.json`, but this skill does not define or generate JSON as a required deliverable.
 
-The generated `shop-reference.md` must use this section structure:
+The generated final `shop-reference.md` must use this lean section structure:
 
-1. Shop Overview
-2. Source Documents Reviewed
-3. Product Families
-4. Standard Operation Flow
-5. Operation Dictionary
-6. Work Center Dictionary
-7. Machine-To-Operation Map
-8. Manual / Human Operations
-9. Inspection And Test Points
-10. Likely Evidence Sources By Operation
-11. Shop-Specific Terminology
-12. Open Mapping Questions
-13. Revision Notes
+1. Shop Type / Process Context
+2. Standard Operation Flow
+3. Operation Dictionary
+4. Operation Step Summaries
+5. Work Center Dictionary
+6. Machine / Equipment Dictionary
+7. Quality Gates
+8. Shop-Specific Language
 
 ## Finalization Rule
 
-If open questions remain, output a draft `shop-reference.md` and list the questions needed to finalize it.
+Open questions belong in the ShopContext Review stage, not in the final `shop-reference.md`.
 
-If the user answers the open questions, update the reference and produce the finalized `shop-reference.md`.
+Workflow:
 
-Do not remove uncertainty unless the user or source documents resolve it.
+1. Produce a ShopContext Review with questions and low-confidence items.
+2. User answers or corrects the review.
+3. Produce the final `shop-reference.md` without unresolved review clutter.
 
-## Downstream Handoff
+If something remains unresolved after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant final section. Do not add a large open-question section to the final reference.
 
-The output `shop-reference.md` should be written so another manufacturing skill can read it later and understand:
+## Final Reference Rules
 
-- Operation sequence
-- Machine names
-- Work centers
-- Inspection/test points
-- Likely evidence sources
-- Open context gaps
-
-Do not assume the downstream skill has access to the original routers or machine lists.
+- Keep the final `shop-reference.md` lean and AI-readable.
+- Fold machine-to-operation mapping into Operation Step Summaries and the Machine / Equipment Dictionary.
+- Fold manual or human operation notes into Operation Step Summaries.
+- Fold inspection/test points into Operation Step Summaries and Quality Gates.
+- Remove generic evidence-source lists from the final reference.
+- Include records/logs only when source files explicitly confirm that the shop retains or uses those records.
+- If confirmed, include records/logs inside the relevant Operation Step Summary as `Confirmed Records / Logs`.
+- Combine terminology and ambiguity handling in `## 8. Shop-Specific Language`.
 
 ## Confidence Levels
 
-Assign confidence per machine-to-operation mapping:
+Use confidence levels during review:
 
 - High: Direct source support or explicit user confirmation.
-- Medium: Likely mapping based on operation name, work center, or process type, but not directly proven.
+- Medium: Likely based on operation name, instruction content, work center, machine/equipment type, or process type, but not directly proven.
 - Low: Weak inference that needs user review.
 - Unknown: Not enough evidence to map.
 
-Do not upgrade confidence just because the mapping seems convenient.
+In the final reference, avoid cluttering every line with confidence. If uncertainty remains important, use concise language such as `appears to`, `likely`, or `Unknown`.
 
 ## Critical Rules
 
 - Preserve operation numbers exactly as shown in source documents.
-- Treat routers as process skeletons, not complete evidence sources.
+- Preserve operation names exactly as shown.
+- Preserve work center codes exactly as shown.
+- Preserve machine names, equipment names, asset IDs, fixture names, and station names exactly as shown.
+- Normalize meanings without deleting the original shop language.
+- Treat routers as process skeletons, not complete process descriptions.
+- Treat attached operation instructions as major sources for internal process steps.
+- Do not assume router operations are atomic.
 - Do not invent missing shop facts.
-- If the source documents do not support a claim, mark it as unknown or place it in Open Mapping Questions.
-- Uncertain mappings must be flagged, not invented.
-- Low-confidence or unknown mappings must create open questions.
-- A confident operation extraction does not make the machine mapping confident.
-- ShopContext creates reference context only. It must not perform RCCA, root cause analysis, defect trend analysis, or corrective action generation.
+- If the source documents do not support a claim, mark it as unknown or flag it for user review.
+- A confident operation extraction does not make the machine or internal-step mapping confident.
+- ShopContext creates reference context only. It must not perform root-cause analysis, corrective-action generation, defect trend analysis, SPC analysis, dynamic data integration, or defect solving.

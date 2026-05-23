@@ -1,6 +1,6 @@
 # Router Extraction Rules
 
-Use these rules when extracting manufacturing context from routers, work orders, travelers, operation lists, or similar process documents.
+Use these rules when extracting manufacturing context from routers, work orders, travelers, operation lists, attached operation instructions, or similar process documents.
 
 ## Extracted Fields
 
@@ -15,6 +15,36 @@ Extract the following when present:
 - Manual or administrative steps
 - Special notes
 - Material, process, setup, or acceptance notes
+- Attached operation instruction references
+- Internal process steps found inside attached operation instructions
+- Explicitly confirmed records, logs, forms, or result files
+
+## Attached Operation Instructions
+
+Treat attached operation instructions as major inputs. They may be PDFs, Word documents, markdown files, text files, copied document content, or instruction text embedded in a work order packet.
+
+Operation instructions often contain the real process detail hidden behind vague router operation names. For example, a router operation named `Process Secondary Side` may contain internal steps such as solder paste application, pick-and-place, vapor phase reflow, wash, and bake.
+
+When instructions are provided:
+
+- Link each instruction to the exact operation number and operation name when possible.
+- Preserve the router operation as the sequence container.
+- Summarize the instruction into internal process steps for that operation.
+- Preserve important source language such as machine names, asset IDs, fixture names, materials, programs, times, temperatures, acceptance criteria, and signoff language.
+- Do not copy the full instruction into the reference.
+- If a record, log, form, result file, or checklist is explicitly required or retained by the instruction, capture it as a confirmed record/log for the relevant operation.
+- If the instruction cannot be confidently linked to an operation, flag it for user review.
+
+## Atomicity Rule
+
+Do not assume router operations are atomic.
+
+The router or work order gives the operation label, operation number, sequence, and often the work center. Attached instructions may show that one router operation contains many internal process steps.
+
+Keep both levels visible:
+
+- Router operation: the named operation in the planned flow.
+- Internal process steps: the summarized work inside that operation, usually from attached instructions or detailed notes.
 
 ## Operation Numbers
 
@@ -73,7 +103,7 @@ Identify inspection or test points from terms such as:
 - Verification
 - Acceptance
 
-Do not treat every operation as an inspection point. Some operations may produce evidence without being inspection or test gates.
+Do not treat every operation as an inspection point. Some operations may include checks without being formal quality gates.
 
 ## Manual Or Administrative Steps
 
@@ -122,10 +152,20 @@ When multiple routers are provided:
 - Use "possible equivalent" when the function appears similar but the source does not prove equivalence.
 - Avoid flattening distinct product routes into one fake universal route.
 
+## Confirmed Records / Logs
+
+Do not create generic evidence-source lists from router or operation names.
+
+Only capture records/logs/forms/results when the source explicitly says they are created, retained, attached, reviewed, signed, exported, or used.
+
+Examples of confirmed records/logs may include a named traveler signoff, required checklist, test result file, AOI report, bake log, inspection form, or serialized data export, but only when source-supported.
+
+Place confirmed records/logs in the relevant Operation Step Summary in the final reference.
+
 ## Source Limits
 
 Treat routers as process skeletons, not complete evidence sources. Routers show intended flow and control points, but they do not prove what happened on a specific date or unit.
 
 Routers describe the intended or planned manufacturing flow. They do not prove that a specific unit actually followed every listed operation, skipped an operation, or experienced a delay, rework loop, machine issue, or operator deviation.
 
-If actual execution is needed, that belongs to future evidence/data layers such as travelers, timestamps, defect records, machine logs, or operator reports.
+If actual execution is needed, the user must provide actual execution records. ShopContext does not perform dynamic data integration or execution-history analysis.
