@@ -25,7 +25,13 @@ Default setup/validation responses should be compact and include:
 
 Avoid duplicating the same operation, work center, machine mapping, instruction summary, and quality-gate tables across multiple sections.
 
-If the user asks for the final reference file and blocking open questions remain, do not output final `reference.md` or final `shop-reference.md`. Output `ShopContext Review - User Confirmation Needed` instead.
+The official final output file name is `shop-reference.md`.
+
+Treat `reference.md` as an informal user alias for `shop-reference.md`. If a user asks for `reference.md`, treat it as a request for `shop-reference.md` unless they explicitly require the exact filename `reference.md`.
+
+Do not create both `reference.md` and `shop-reference.md`.
+
+If the user asks for the final reference file and blocking open questions remain, do not output final `shop-reference.md`, `reference.md`, or any other final reference file. Output `ShopContext Review - User Confirmation Needed` instead.
 
 A request to `generate reference.md`, `generate shop-reference.md`, `create the reference`, `write the reference`, or `save the reference` does not override the Blocking Review Gate.
 
@@ -177,15 +183,15 @@ If non-blocking uncertainty remains after review, preserve it briefly in the rel
 
 Do not include a final open-questions section.
 
-Do not include unresolved blocking questions, blocking uncertainty, unresolved blocking mappings, or review questions inside final `reference.md` or final `shop-reference.md`. Preserving blocking uncertainty or questions inside a final reference file is a gate failure.
+Do not include unresolved blocking questions, blocking uncertainty, unresolved blocking mappings, or review questions inside final `shop-reference.md` or any explicitly required final `reference.md`. Preserving blocking uncertainty or questions inside a final reference file is a gate failure.
 
 Do not include generic evidence-source or likely-records sections. Include records/logs only when the source explicitly confirms they are retained or used, and place them inside the relevant Operation Step Summary as `Confirmed Records / Logs`.
 
 Low confidence does not stop drafting. Low confidence does stop finalization. Drafts may contain clearly labeled uncertainty; final output requires user confirmation or correction of blocking uncertain items.
 
-Do not create, write, save, or present final `reference.md` or final `shop-reference.md` while blocking open questions remain unanswered.
+Do not create, write, save, or present final `shop-reference.md`, final `reference.md`, or any final reference file while blocking open questions remain unanswered.
 
-A final `reference.md` or final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
+A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions. Use `reference.md` only when the user explicitly requires that exact filename.
 
 If blocking open questions exist, output exactly this review shape:
 
@@ -199,12 +205,12 @@ If blocking open questions exist, output exactly this review shape:
 
 ## Next Step
 
-Tell the user to answer the blocking questions. Do not include final `reference.md` or final `shop-reference.md`.
+Tell the user to answer the blocking questions. Do not include final `shop-reference.md`, final `reference.md`, or any final reference file.
 
 If the user does not answer clearly, output:
 
 # ShopContext Review - Still Blocked
 
-List the blocking questions that remain. Do not create final `reference.md` or final `shop-reference.md`.
+List the blocking questions that remain. Do not create final `shop-reference.md`, final `reference.md`, or any final reference file.
 
-If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `reference.md` or final `shop-reference.md`.
+If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `shop-reference.md`, final `reference.md`, or any final reference file.

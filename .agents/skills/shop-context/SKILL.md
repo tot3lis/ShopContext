@@ -112,7 +112,13 @@ Do not create, write, save, or present final `shop-reference.md` while blocking 
 
 A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
 
-Treat `reference.md`, `shop-reference.md`, and any user-requested final reference file name as the same gated final output. A request to `generate reference.md`, `generate shop-reference.md`, `create the reference`, `write the reference`, or `save the reference` does not override the Blocking Review Gate.
+The official final output file name is `shop-reference.md`.
+
+Treat `reference.md` as an informal user alias for `shop-reference.md`. If a user asks for `reference.md`, treat it as a request for `shop-reference.md` unless they explicitly require the exact filename `reference.md`.
+
+Do not create both `reference.md` and `shop-reference.md`.
+
+Apply the Blocking Review Gate to any final reference-file request, regardless of whether the user says `reference.md`, `shop-reference.md`, or `reference file`. A request to `generate reference.md`, `generate shop-reference.md`, `create the reference`, `write the reference`, or `save the reference` does not override the Blocking Review Gate.
 
 Blocking questions must be asked before creating any final reference file. Preserving blocking uncertainty, unresolved mappings, or user review questions inside `reference.md` or `shop-reference.md` is a gate failure.
 
@@ -144,9 +150,9 @@ Blocking open questions include:
 
 If any blocking open questions exist:
 
-1. Do not create `reference.md` or `shop-reference.md`.
-2. Do not write `reference.md` or `shop-reference.md`.
-3. Do not save `reference.md` or `shop-reference.md`.
+1. Do not create `shop-reference.md`.
+2. Do not create `reference.md` as a fallback or alias.
+3. Do not write or save any final reference file.
 4. Do not present a final `reference.md` or `shop-reference.md` in chat.
 5. Output `ShopContext Review - User Confirmation Needed` instead.
 6. Include only:
@@ -155,7 +161,7 @@ If any blocking open questions exist:
    - Blocking open questions
    - Clear next step telling the user to answer the questions
 7. Wait for the user to answer.
-8. Only after the user answers may ShopContext create final `reference.md` or `shop-reference.md`.
+8. Only after the user answers may ShopContext create final `shop-reference.md`, unless the user explicitly requires the exact filename `reference.md`.
 
 If the user does not answer clearly:
 
@@ -191,7 +197,7 @@ Compact Validation Mode should summarize results and avoid duplicating full tabl
 
 User Setup Mode should summarize what ShopContext found, the main uncertainties, the highest-priority user questions, and the next step. It should not output the full `shop-reference.md`.
 
-Full Reference Mode should output the complete `shop-reference.md` using the required lean schema only when no blocking open questions remain. If blocking open questions remain, output `ShopContext Review - User Confirmation Needed` instead, even when the user explicitly asked to generate, create, write, save, or present `reference.md` or `shop-reference.md`.
+Full Reference Mode should output the complete `shop-reference.md` using the required lean schema only when no blocking open questions remain. If blocking open questions remain, output `ShopContext Review - User Confirmation Needed` instead, even when the user explicitly asked to generate, create, write, save, or present `reference.md`, `shop-reference.md`, or a reference file.
 
 Do not output a full ShopContext Review and a full draft `shop-reference.md` in the same response unless the user explicitly asks for both and no blocking open questions exist.
 
@@ -227,7 +233,11 @@ Only include section 11 when the user explicitly asks for a full draft reference
 
 ## Required Output
 
-The final output is `shop-reference.md`.
+The official final output file name is `shop-reference.md`.
+
+`reference.md` is only an informal user alias for `shop-reference.md`. If a user asks for `reference.md`, create `shop-reference.md` unless the user explicitly requires the exact filename `reference.md`.
+
+Do not create both `reference.md` and `shop-reference.md`.
 
 Do not require JSON output. A future optional output may be `shop-context.json` or `shop-reference.json`, but this skill does not define or generate JSON as a required deliverable.
 

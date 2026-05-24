@@ -72,6 +72,8 @@ ShopContext helps AI understand:
 - quality gates
 - shop-specific language
 
+The official final output file name is `shop-reference.md`. If you say `reference.md`, ShopContext treats that as an informal alias for `shop-reference.md` unless you explicitly require the exact filename `reference.md`. It should not create both files.
+
 ## Validation
 
 ShopContext has passed simulated validation for:
