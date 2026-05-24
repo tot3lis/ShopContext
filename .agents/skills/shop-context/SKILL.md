@@ -1,3 +1,8 @@
+---
+name: shop-context
+description: Use when creating or updating a shop-specific manufacturing reference file from routers, work orders, operation lists, work centers, machine lists, asset exports, operation instructions, and user notes.
+---
+
 # ShopContext
 
 ShopContext is a standalone manufacturing AI prep skill. It turns messy manufacturing shop documents into a clean, AI-readable `shop-reference.md` file that explains how a specific shop works.
