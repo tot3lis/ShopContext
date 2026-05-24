@@ -112,6 +112,10 @@ Do not create, write, save, or present final `shop-reference.md` while blocking 
 
 A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
 
+Treat `reference.md`, `shop-reference.md`, and any user-requested final reference file name as the same gated final output. A request to `generate reference.md`, `generate shop-reference.md`, `create the reference`, `write the reference`, or `save the reference` does not override the Blocking Review Gate.
+
+Blocking questions must be asked before creating any final reference file. Preserving blocking uncertainty, unresolved mappings, or user review questions inside `reference.md` or `shop-reference.md` is a gate failure.
+
 Blocking open questions are unresolved items that could make the final reference misleading for downstream manufacturing skills.
 
 An unresolved item is blocking when it affects one or more of these:
@@ -140,10 +144,10 @@ Blocking open questions include:
 
 If any blocking open questions exist:
 
-1. Do not create `shop-reference.md`.
-2. Do not write `shop-reference.md`.
-3. Do not save `shop-reference.md`.
-4. Do not present a final `shop-reference.md` in chat.
+1. Do not create `reference.md` or `shop-reference.md`.
+2. Do not write `reference.md` or `shop-reference.md`.
+3. Do not save `reference.md` or `shop-reference.md`.
+4. Do not present a final `reference.md` or `shop-reference.md` in chat.
 5. Output `ShopContext Review - User Confirmation Needed` instead.
 6. Include only:
    - Sources reviewed
@@ -151,18 +155,18 @@ If any blocking open questions exist:
    - Blocking open questions
    - Clear next step telling the user to answer the questions
 7. Wait for the user to answer.
-8. Only after the user answers may ShopContext create final `shop-reference.md`.
+8. Only after the user answers may ShopContext create final `reference.md` or `shop-reference.md`.
 
 If the user does not answer clearly:
 
 - Output `ShopContext Review - Still Blocked`.
 - List the blocking questions that remain.
-- Do not create final `shop-reference.md`.
+- Do not create final `reference.md` or `shop-reference.md`.
 
 If the user explicitly asks to proceed without answering blocking questions:
 
-- Create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference.
-- Do not create final `shop-reference.md`.
+- Create or present only a clearly labeled draft-only reference, such as `shop-reference-draft.md`.
+- Do not create final `reference.md` or `shop-reference.md`.
 
 Non-blocking unknowns may remain in the final reference only when they do not affect:
 
@@ -187,9 +191,9 @@ Compact Validation Mode should summarize results and avoid duplicating full tabl
 
 User Setup Mode should summarize what ShopContext found, the main uncertainties, the highest-priority user questions, and the next step. It should not output the full `shop-reference.md`.
 
-Full Reference Mode should output the complete `shop-reference.md` using the required lean schema only when no blocking open questions remain. If blocking open questions remain, output `ShopContext Review - User Confirmation Needed` instead.
+Full Reference Mode should output the complete `shop-reference.md` using the required lean schema only when no blocking open questions remain. If blocking open questions remain, output `ShopContext Review - User Confirmation Needed` instead, even when the user explicitly asked to generate, create, write, save, or present `reference.md` or `shop-reference.md`.
 
-Do not output a full ShopContext Review and a full draft `shop-reference.md` in the same response unless the user explicitly asks for both.
+Do not output a full ShopContext Review and a full draft `shop-reference.md` in the same response unless the user explicitly asks for both and no blocking open questions exist.
 
 ## Standard Setup Response Format
 
@@ -219,7 +223,7 @@ When reviewing source inputs, respond using:
 
 ## 11. Draft shop-reference.md
 
-Only include section 11 when the user explicitly asks for a full draft reference.
+Only include section 11 when the user explicitly asks for a full draft reference and no blocking open questions exist.
 
 ## Required Output
 
@@ -242,6 +246,8 @@ The generated final `shop-reference.md` must use this lean section structure:
 
 Open questions belong in the ShopContext Review stage, not in the final `shop-reference.md`.
 
+Final `reference.md` and final `shop-reference.md` must not contain a questions section for unresolved blocking items. Blocking questions are asked in the review response before final reference creation. They are never preserved inside the final reference file.
+
 Workflow:
 
 1. Produce a ShopContext Review from the provided files.
@@ -253,6 +259,8 @@ Workflow:
 If a non-blocking unknown remains after user review, mark it briefly as `Unknown`, `appears to`, or `likely` inside the relevant final section. Do not add a large open-question section to the final reference.
 
 Draft output is allowed with uncertainty. Final `shop-reference.md` requires user confirmation or correction of blocking uncertain items. Do not silently present uncertain mappings as final.
+
+A request to generate the reference file does not override this rule.
 
 ## Final Reference Rules
 

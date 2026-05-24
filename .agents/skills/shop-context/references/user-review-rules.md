@@ -78,29 +78,37 @@ Example:
 
 ## Draft And Final Reference Rule
 
-Open questions should not prevent ShopContext from producing a draft `shop-reference.md`.
+Open questions do not stop review-stage drafting, but blocking open questions do stop creation of any final reference file.
 
-If questions remain, include the best-supported reference content and clearly label uncertain, low-confidence, or unmapped items.
+If blocking open questions remain, do not create, write, save, or present `reference.md` or `shop-reference.md`. Output `ShopContext Review - User Confirmation Needed` first and ask the blocking questions in the review response.
+
+A user request to `generate reference.md`, `generate shop-reference.md`, `create the reference`, `write the reference`, or `save the reference` does not override the Blocking Review Gate.
+
+Do not include unresolved blocking questions, blocking uncertainty, unresolved blocking mappings, or a questions section inside final `reference.md` or final `shop-reference.md`.
+
+If the user explicitly asks to proceed without answering blocking questions, create or present only a clearly labeled draft-only reference, such as `shop-reference-draft.md`; do not create final `reference.md` or final `shop-reference.md`.
+
+If only non-blocking questions remain and the user asks for a draft, include the best-supported draft content and clearly label uncertain, low-confidence, or unmapped items.
 
 The draft should remain usable by AI, but users should be able to see which parts still need confirmation.
 
 Do not remove an open question until the user or source documents resolve it.
 
-Open questions belong in the ShopContext Review stage. Do not include a standalone open-questions section in the final `shop-reference.md`.
+Open questions belong in the ShopContext Review stage. Do not include a standalone open-questions section in the final `reference.md` or final `shop-reference.md`.
 
 If non-blocking uncertainty remains after user review, mark it briefly inside the relevant final section using `Unknown`, `appears to`, or `likely`.
 
 Low confidence does not stop drafting. Low confidence does stop finalization.
 
-Do not create, write, save, or present final `shop-reference.md` while blocking open questions remain unanswered.
+Do not create, write, save, or present final `reference.md` or final `shop-reference.md` while blocking open questions remain unanswered.
 
-A final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
+A final `reference.md` or final `shop-reference.md` is only allowed after blocking open questions are answered, or after ShopContext determines there are no blocking open questions.
 
-If blocking open questions exist, output `ShopContext Review - User Confirmation Needed` instead of final `shop-reference.md`.
+If blocking open questions exist, output `ShopContext Review - User Confirmation Needed` instead of final `reference.md` or final `shop-reference.md`.
 
-If the user does not answer clearly, output `ShopContext Review - Still Blocked`, list the remaining blocking questions, and do not create final `shop-reference.md`.
+If the user does not answer clearly, output `ShopContext Review - Still Blocked`, list the remaining blocking questions, and do not create final `reference.md` or final `shop-reference.md`.
 
-If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `shop-reference.md`.
+If the user explicitly asks to proceed without answering blocking questions, create or present only `shop-reference-draft.md`, or a clearly labeled draft-only reference. Do not create final `reference.md` or final `shop-reference.md`.
 
 Do not silently present uncertain mappings as final.
 
